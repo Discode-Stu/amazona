@@ -1,15 +1,15 @@
+import Axios from "axios"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import Container from "react-bootstrap/Container"
 import Form from "react-bootstrap/Form"
 import Button from "react-bootstrap/Button"
 import { Helmet } from "react-helmet-async"
-import { useLocation, Link, useNavigate } from "react-router-dom"
-import axios from "axios"
 import { useContext, useEffect, useState } from "react"
 import { Store } from "../Store"
 import { toast } from "react-toastify"
 import { getError } from "../utils"
 
-export default function SigninScreeen() {
+export default function SigninScreen() {
   const navigate = useNavigate()
   const { search } = useLocation()
   const redirectInUrl = new URLSearchParams(search).get("redirect")
@@ -20,19 +20,18 @@ export default function SigninScreeen() {
 
   const { state, dispatch: ctxDispatch } = useContext(Store)
   const { userInfo } = state
-
   const submitHandler = async (e) => {
     e.preventDefault()
     try {
-      const { data } = await axios.post("/api/users/signin", {
+      const { data } = await Axios.post("/api/users/signin", {
         email,
         password,
       })
       ctxDispatch({ type: "USER_SIGNIN", payload: data })
       localStorage.setItem("userInfo", JSON.stringify(data))
       navigate(redirect || "/")
-    } catch (e) {
-      toast.error(getError(e))
+    } catch (err) {
+      toast.error(getError(err))
     }
   }
 
@@ -45,15 +44,14 @@ export default function SigninScreeen() {
   return (
     <Container className="small-container">
       <Helmet>
-        <title>Signin</title>
+        <title>Sign In</title>
       </Helmet>
-      <h1 className="my-3">Signin</h1>
+      <h1 className="my-3">Sign In</h1>
       <Form onSubmit={submitHandler}>
         <Form.Group className="mb-3" controlId="email">
           <Form.Label>Email</Form.Label>
           <Form.Control
             type="email"
-            placeholder="Enter email"
             required
             onChange={(e) => setEmail(e.target.value)}
           />
@@ -62,7 +60,6 @@ export default function SigninScreeen() {
           <Form.Label>Password</Form.Label>
           <Form.Control
             type="password"
-            placeholder="Enter password"
             required
             onChange={(e) => setPassword(e.target.value)}
           />

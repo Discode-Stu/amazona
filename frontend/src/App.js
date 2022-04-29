@@ -6,14 +6,14 @@ import ProductScreen from "./screens/ProductScreen"
 import Navbar from "react-bootstrap/Navbar"
 import Badge from "react-bootstrap/Badge"
 import Nav from "react-bootstrap/Nav"
-import Container from "react-bootstrap/Container"
 import NavDropdown from "react-bootstrap/NavDropdown"
+import Container from "react-bootstrap/Container"
 import { LinkContainer } from "react-router-bootstrap"
 import { useContext } from "react"
 import { Store } from "./Store"
 import CartScreen from "./screens/CartScreen"
-import SigninScreeen from "./screens/SigninScreen"
-import ShippingScreen from "./screens/ShippingScreen"
+import SigninScreen from "./screens/SigninScreen"
+import ShippingAddressScreen from "./screens/ShippingAddressScreen"
 
 function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store)
@@ -22,6 +22,7 @@ function App() {
   const signoutHandler = () => {
     ctxDispatch({ type: "USER_SIGNOUT" })
     localStorage.removeItem("userInfo")
+    localStorage.removeItem("shippingAddress")
   }
   return (
     <BrowserRouter>
@@ -60,7 +61,7 @@ function App() {
                     </Link>
                   </NavDropdown>
                 ) : (
-                  <Link to="/signin" className="nav-link">
+                  <Link className="nav-link" to="/signin">
                     Sign In
                   </Link>
                 )}
@@ -71,11 +72,14 @@ function App() {
         <main>
           <Container className="mt-3">
             <Routes>
-              <Route path="/" element={<HomeScreen />} />
               <Route path="/product/:slug" element={<ProductScreen />} />
               <Route path="/cart" element={<CartScreen />} />
-              <Route path="/signin" element={<SigninScreeen />} />
-              <Route path="/shipping" element={<ShippingScreen />} />
+              <Route path="/signin" element={<SigninScreen />} />
+              <Route
+                path="/shipping"
+                element={<ShippingAddressScreen />}
+              ></Route>
+              <Route path="/" element={<HomeScreen />} />
             </Routes>
           </Container>
         </main>
