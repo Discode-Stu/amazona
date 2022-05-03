@@ -39,7 +39,7 @@ export default function DashboardScreen() {
         })
         dispatch({ type: "FETCH_SUCCESS", payload: data })
       } catch (err) {
-        toast.error(getError(err))
+        // toast.error(getError(err))
         dispatch({
           type: "FETCH_FAILURE",
           payload: getError(err),
