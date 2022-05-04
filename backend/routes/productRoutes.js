@@ -56,6 +56,21 @@ productRouter.put(
   })
 )
 
+productRouter.delete(
+  "/:id",
+  isAuth,
+  isAdmin,
+  expressAsyncHandler(async (req, res) => {
+    const product = await Product.findById(req.params.id)
+    if (product) {
+      await product.remove()
+      res.send({ message: "Product deleted successfully" })
+    } else {
+      res.status(404).send({ message: "Product not found" })
+    }
+  })
+)
+
 const PAGE_SIZE = 3
 
 productRouter.get(
