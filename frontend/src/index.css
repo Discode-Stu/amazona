@@ -109,13 +109,14 @@ main {
   left: 0;
   right: 0;
   margin: 0.5rem auto;
-  width: 25rem;
+  width: 35rem;
   height: 3rem;
   display: flex;
 }
 .map-input-box input {
   border-radius: 1rem 0 0 1rem;
   border-right: 0;
+  width: 300px;
 }
 .map-input-box button {
   border-radius: 0 1rem 1rem 0;
