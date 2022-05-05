@@ -11,7 +11,6 @@ orderRouter.get(
   "/",
   isAuth,
   isAdmin,
-
   expressAsyncHandler(async (req, res) => {
     const orders = await Order.find().populate("user", "name")
     res.send(orders)
@@ -32,11 +31,11 @@ orderRouter.post(
       totalPrice: req.body.totalPrice,
       user: req.user._id,
     })
+
     const order = await newOrder.save()
-    res.status(201).send({ messsage: "New Order Created", order })
+    res.status(201).send({ message: "New Order Created", order })
   })
 )
-
 orderRouter.get(
   "/summary",
   isAuth,
