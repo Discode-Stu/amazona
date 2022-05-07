@@ -74,13 +74,13 @@ function App() {
       const { data } = await axios("/api/keys/google", {
         headers: { Authorization: `BEARER ${userInfo.token}` },
       })
-      console.log("datakey", data)
       setGoogleApiKey(data.key)
-      // getUserCurrentLocation()
     }
 
-    fetch()
-  }, [ctxDispatch])
+    if (userInfo) {
+      fetch()
+    }
+  }, [userInfo])
 
   return (
     <LoadScript libraries={libs} googleMapsApiKey={googleApiKey}>
