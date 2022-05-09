@@ -17,6 +17,8 @@ export default function CartScreen() {
     cart: { cartItems },
   } = state
 
+  console.log("cartItems", cartItems)
+
   const updateCartHandler = async (item, quantity) => {
     const { data } = await axios.get(`/api/products/${item._id}`)
     if (data.countInStock < quantity) {
@@ -25,7 +27,7 @@ export default function CartScreen() {
     }
     ctxDispatch({
       type: "CART_ADD_ITEM",
-      payload: { ...item, quantity },
+      payload: { ...item, quantity, seller: data.seller },
     })
   }
   const removeItemHandler = (item) => {

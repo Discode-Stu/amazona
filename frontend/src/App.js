@@ -35,6 +35,8 @@ import UserListScreen from "./screens/UserListScreen"
 import UserEditScreen from "./screens/UserEditScreen"
 import MapScreen from "./screens/MapScreen"
 import { LoadScript } from "@react-google-maps/api"
+import SellerRoute from "./components/SellerRoute"
+import SellerProductListScreen from "./screens/SellerProductListScreen"
 
 const libs = ["places"]
 
@@ -42,6 +44,7 @@ function App() {
   const { state, dispatch: ctxDispatch } = useContext(Store)
   const { fullBox, cart, userInfo } = state
 
+  // const [googleApiKey, setGoogleApiKey] = useState("")
   const [googleApiKey, setGoogleApiKey] = useState(
     "AIzaSyDG5RNZS4E1tMM11zViQHf_0_htFKl6KYo"
   )
@@ -68,6 +71,8 @@ function App() {
     }
     fetchCategories()
   }, [])
+
+  console.log("userInfo", userInfo)
 
   useEffect(() => {
     const fetch = async () => {
@@ -145,6 +150,16 @@ function App() {
                       <Link className="nav-link" to="/signin">
                         Sign In
                       </Link>
+                    )}
+                    {userInfo && userInfo.isSeller && (
+                      <NavDropdown title="Seller" id="basic-nav-dropdown">
+                        <LinkContainer to="/seller/products">
+                          <NavDropdown.Item>Products</NavDropdown.Item>
+                        </LinkContainer>
+                        <LinkContainer to="/seller/orders">
+                          <NavDropdown.Item>Orders</NavDropdown.Item>
+                        </LinkContainer>
+                      </NavDropdown>
                     )}
                     {userInfo && userInfo.isAdmin && (
                       <NavDropdown title="Admin" id="basic-nav-dropdown">
@@ -286,6 +301,22 @@ function App() {
                     <AdminRoute>
                       <UserEditScreen />
                     </AdminRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/seller/products"
+                  element={
+                    <SellerRoute>
+                      <ProductListScreen />
+                    </SellerRoute>
+                  }
+                ></Route>
+                <Route
+                  path="/seller/orders"
+                  element={
+                    <SellerRoute>
+                      <OrderListScreen />
+                    </SellerRoute>
                   }
                 ></Route>
                 <Route path="/" element={<HomeScreen />} />

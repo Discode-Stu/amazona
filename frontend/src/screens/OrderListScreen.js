@@ -5,7 +5,7 @@ import { getError } from "../utils"
 import { Helmet } from "react-helmet-async"
 import LoadingBox from "../components/LoadingBox"
 import MessageBox from "../components/MessageBox"
-import { useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import Button from "react-bootstrap/Button"
 import { toast } from "react-toastify"
 
@@ -35,6 +35,11 @@ export default function OrderListScreen() {
   const { state } = useContext(Store)
   const { userInfo } = state
 
+  const location = useLocation()
+  const sellerMode = location.pathname.indexOf("/seller") >= 0
+
+  const seller = sellerMode ? userInfo._id : ""
+
   const [{ loading, error, orders, loadingDelete, successDelete }, dispatch] =
     useReducer(reducer, {
       loading: true,
@@ -45,10 +50,10 @@ export default function OrderListScreen() {
     const fetchData = async () => {
       try {
         dispatch({ type: "FETCH_REQUEST" })
-        const { data } = await axios.get(`/api/orders`, {
+        const { data } = await axios.get(`/api/orders?seller=${seller}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         })
-        console.log("data", data)
+        console.log("data__::__", data)
         dispatch({ type: "FETCH_SUCCESS", payload: data })
       } catch (err) {
         dispatch({ type: "FETCH_FAILURE", payload: getError(err) })
@@ -103,7 +108,7 @@ export default function OrderListScreen() {
           </thead>
           <tbody>
             {orders.map((order) => (
-              <tr key={order._id}>
+              <tr style={{ verticalAlign: "middle" }} key={order._id}>
                 <td>{order._id}</td>
                 <td>{order.user ? order.user.name : "DELETED USER"}</td>
                 <td>{order.createdAt.substring(0, 10)}</td>

@@ -27,6 +27,15 @@ export default function ProfileScreen() {
   const [email, setEmail] = useState(userInfo.email)
   const [password, setPassword] = useState("")
   const [confirmPassword, setConfirmPassword] = useState("")
+  const [sellerName, setSellerName] = useState(
+    userInfo.isSeller ? userInfo.seller?.name : ""
+  )
+  const [sellerLogo, setSellerLogo] = useState(
+    userInfo.isSeller ? userInfo.seller?.logo : ""
+  )
+  const [sellerDesc, setSellerDesc] = useState(
+    userInfo.isSeller ? userInfo.seller?.description : ""
+  )
 
   const [{ loadingUpdate }, dispatch] = useReducer(reducer, {
     loadingUpdate: false,
@@ -34,25 +43,35 @@ export default function ProfileScreen() {
 
   const submitHandler = async (e) => {
     e.preventDefault()
+    // if (password !== confirmPassword) {
+    //   toast.error("Passwords do not match")
+    //   return
+    // }
     try {
-      const { data } = await axios.put(
-        "/api/users/profile",
+      dispatch({ type: "UPDATE_REQUEST" })
+      const { data } = await axios.post(
+        `/api/users/profile`,
         {
           name,
           email,
           password,
+          sellerName,
+          sellerLogo,
+          sellerDesc,
         },
         {
-          headers: { Authorization: `Bearer ${userInfo.token}` },
+          headers: { authorization: `Bearer ${userInfo.token}` },
         }
       )
       dispatch({
         type: "UPDATE_SUCCESS",
       })
+      console.log("data__:::", data)
       ctxDispatch({ type: "USER_SIGNIN", payload: data })
       localStorage.setItem("userInfo", JSON.stringify(data))
       toast.success("User updated successfully")
     } catch (err) {
+      console.log("err", err)
       dispatch({
         type: "FETCH_FAIL",
       })
@@ -75,7 +94,7 @@ export default function ProfileScreen() {
             required
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="name">
+        <Form.Group className="mb-3" controlId="email">
           <Form.Label>Email</Form.Label>
           <Form.Control
             type="email"
@@ -88,16 +107,50 @@ export default function ProfileScreen() {
           <Form.Label>Password</Form.Label>
           <Form.Control
             type="password"
+            value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="password">
+        <Form.Group className="mb-3" controlId="confirmPassword">
           <Form.Label>Confirm Password</Form.Label>
           <Form.Control
             type="password"
+            value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </Form.Group>
+        {userInfo.isSeller && (
+          <>
+            <h2 className="my-3">Seller</h2>
+            <Form.Group className="mb-3" controlId="sellerName">
+              <Form.Label>Seller Name</Form.Label>
+              <Form.Control
+                type="text"
+                value={sellerName}
+                placeholder="Enter seller name"
+                onChange={(e) => setSellerName(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="sellerLogo">
+              <Form.Label>Seller Logo</Form.Label>
+              <Form.Control
+                type="text"
+                value={sellerLogo}
+                placeholder="Enter seller logo"
+                onChange={(e) => setSellerLogo(e.target.value)}
+              />
+            </Form.Group>
+            <Form.Group className="mb-3" controlId="sellerDesc">
+              <Form.Label>Seller Description</Form.Label>
+              <Form.Control
+                type="text"
+                value={sellerDesc}
+                placeholder="Enter seller description"
+                onChange={(e) => setSellerDesc(e.target.value)}
+              />
+            </Form.Group>
+          </>
+        )}
         <div className="mb-3">
           <Button type="submit">Update</Button>
         </div>

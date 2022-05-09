@@ -15,6 +15,7 @@ userRouter.get(
     res.send(users)
   })
 )
+
 userRouter.get(
   "/:id",
   isAuth,
@@ -28,6 +29,7 @@ userRouter.get(
     }
   })
 )
+
 userRouter.put(
   "/:id",
   isAuth,
@@ -37,7 +39,8 @@ userRouter.put(
     if (user) {
       user.name = req.body.name || user.name
       user.email = req.body.email || user.email
-      user.isAdmin = Boolean(req.body.isAdmin)
+      user.isAdmin = req.body.isAdmin ? true : false
+      user.isSeller = req.body.isSeller ? true : false
       const updatedUser = await user.save()
       res.send({ message: "User Updated", user: updatedUser })
     } else {
@@ -76,6 +79,7 @@ userRouter.post(
           name: user.name,
           email: user.email,
           isAdmin: user.isAdmin,
+          isSeller: user.isSeller,
           token: generateToken(user),
         })
         return
@@ -99,19 +103,27 @@ userRouter.post(
       name: user.name,
       email: user.email,
       isAdmin: user.isAdmin,
+      isSeller: user.isSeller,
       token: generateToken(user),
     })
   })
 )
 
-userRouter.put(
+userRouter.post(
   "/profile",
   isAuth,
   expressAsyncHandler(async (req, res) => {
+    console.log("req.body_______", req.body)
     const user = await User.findById(req.user._id)
+    console.log("user", user)
     if (user) {
       user.name = req.body.name || user.name
       user.email = req.body.email || user.email
+      if (user.isSeller) {
+        user.seller.name = req.body.sellerName || user.seller.name
+        user.seller.logo = req.body.sellerLogo || user.seller.logo
+        user.seller.description = req.body.sellerDesc || user.seller.description
+      }
       if (req.body.password) {
         user.password = bcrypt.hashSync(req.body.password, 8)
       }
@@ -122,6 +134,12 @@ userRouter.put(
         name: updatedUser.name,
         email: updatedUser.email,
         isAdmin: updatedUser.isAdmin,
+        isSeller: updatedUser.isSeller,
+        seller: {
+          name: updatedUser.seller.name,
+          logo: updatedUser.seller.logo,
+          description: updatedUser.seller.description,
+        },
         token: generateToken(updatedUser),
       })
     } else {
@@ -130,4 +148,43 @@ userRouter.put(
   })
 )
 
+// userRouter.put(
+//   "/profile",
+//   isAuth,
+//   () => {
+//     console.log("hellooo")
+//   },
+//   expressAsyncHandler(async (req, res) => {
+//     console.log("lsjfksdlkfjsdlfjk")
+//     const user = await User.findById(req.user._id)
+//     if (user) {
+//       user.name = req.body.name || user.name
+//       user.email = req.body.email || user.email
+//       if (user.isSeller) {
+//         user.seller.name = req.body.sellerName || user.seller.name
+//         user.seller.logo = req.body.sellerLogo || user.seller.logo
+//         user.seller.description = req.body.sellerDesc || user.seller.description
+//       }
+//       if (req.body.password) {
+//         user.password = bcrypt.hashSync(req.body.password, 8)
+//       }
+
+//       const updatedUser = await user.save()
+//       res.send({
+//         _id: updatedUser._id,
+//         name: updatedUser.name,
+//         email: updatedUser.email,
+//         isAdmin: updatedUser.isAdmin,
+//         isSeller: updatedUser.isSeller,
+//         token: generateToken(updatedUser),
+//       })
+//     } else {
+//       res.status(404).send({ message: "User not found" })
+//     }
+//   })
+// )
+
 export default userRouter
+
+// Cast to ObjectId failed for value "profile"
+// (type string) at path "_id" for model "User"

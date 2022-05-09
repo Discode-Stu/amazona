@@ -1,7 +1,7 @@
 import axios from "axios"
 import React, { useContext, useEffect, useReducer } from "react"
 import { getError } from "../utils"
-import { Link, useLocation, useNavigate, useParams } from "react-router-dom"
+import { Link, useLocation, useNavigate } from "react-router-dom"
 import { Store } from "../Store"
 import LoadingBox from "../components/LoadingBox"
 import MessageBox from "../components/MessageBox"
@@ -43,7 +43,7 @@ const reducer = (state, action) => {
   }
 }
 
-export default function ProductListScreen(props) {
+export default function SellerProductListScreen(props) {
   const [
     {
       loading,
@@ -68,21 +68,23 @@ export default function ProductListScreen(props) {
   const { userInfo } = state
 
   const navigate = useNavigate()
-  const location = useLocation()
-  const sellerMode = location.pathname.indexOf("/seller") >= 0
 
-  const seller = sellerMode ? userInfo._id : ""
+  // let seller = ""
+
+  // const sellerMode = props.match.path.indexOf("/seller") >= 0
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const { data } = await axios.get(
-          `/api/products/admin?seller=${seller}&page=${page}`,
+          `/api/products?seller=${userInfo._id}`,
           {
+            // const { data } = await axios.get(`/api/products/admin?page=${page}`, {
             headers: { Authorization: `Bearer ${userInfo.token}` },
           }
         )
-        dispatch({ type: "FETCH_SUCCESS", payload: data })
+        console.log("data", data)
+        dispatch({ type: "FETCH_SUCCESS", payload: { products: data } })
       } catch (err) {
         // toast.error(getError(err))
         dispatch({
@@ -97,6 +99,8 @@ export default function ProductListScreen(props) {
       fetchData()
     }
   }, [page, userInfo, successDelete])
+
+  console.log("products", products)
 
   const createHandler = async () => {
     if (window.confirm("Create product?")) {
@@ -174,49 +178,48 @@ export default function ProductListScreen(props) {
               </tr>
             </thead>
             <tbody>
-              {products.map((product) => (
-                <tr style={{ verticalAlign: "middle" }} key={product._id}>
-                  <td>{product._id}</td>
-                  <td>{product.name}</td>
-                  <td>{product.price}</td>
-                  <td>{product.category}</td>
-                  <td>{product.brand}</td>
-                  <td>
-                    <Button
-                      type="button"
-                      variant="light"
-                      onClick={() => navigate(`/admin/product/${product._id}`)}
-                    >
-                      Edit
-                    </Button>
-                    &nbsp;
-                    <Button
-                      type="button"
-                      variant="light"
-                      onClick={() => deleteHandler(product)}
-                    >
-                      Delete
-                    </Button>
-                  </td>
-                </tr>
-              ))}
+              {products.length >= 1 &&
+                products.map((product) => (
+                  <tr key={product._id}>
+                    <td>{product._id}</td>
+                    <td>{product.name}</td>
+                    <td>{product.price}</td>
+                    <td>{product.category}</td>
+                    <td>{product.brand}</td>
+                    <td>
+                      <Button
+                        type="button"
+                        variant="light"
+                        onClick={() =>
+                          navigate(`/admin/product/${product._id}`)
+                        }
+                      >
+                        Edit
+                      </Button>
+                      &nbsp;
+                      <Button
+                        type="button"
+                        variant="light"
+                        onClick={() => deleteHandler(product)}
+                      >
+                        Delete
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
-          <div>
+          {/* <div>
             {[...Array(pages).keys()].map((x) => (
               <Link
                 className={x + 1 === Number(page) ? "btn text-bold" : "btn"}
                 key={x + 1}
-                to={
-                  sellerMode
-                    ? `/seller/products?page=${x + 1}`
-                    : `/admin/products?page=${x + 1}`
-                }
+                to={`/admin/products?page=${x + 1}`}
               >
                 {x + 1}
               </Link>
             ))}
-          </div>
+          </div> */}
         </>
       )}
     </div>

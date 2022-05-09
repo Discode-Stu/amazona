@@ -1,22 +1,23 @@
 import express from "express"
 import Product from "../models/productModel.js"
 import expressAsyncHandler from "express-async-handler"
-import { isAdmin, isAuth } from "../utils.js"
+import { isAdmin, isAuth, isSellerOrAdmin } from "../utils.js"
 
 const productRouter = express.Router()
 
 productRouter.get("/", async (req, res) => {
-  const products = await Product.find()
+  const products = await Product.find({})
   res.send(products)
 })
 
 productRouter.post(
   "/",
   isAuth,
-  isAdmin,
+  isSellerOrAdmin,
   expressAsyncHandler(async (req, res) => {
     const newProduct = new Product({
       name: "sample name " + Date.now(),
+      seller: req.user._id,
       slug: "sample-name-" + Date.now(),
       image: "/images/p1.jpg",
       price: 0,
@@ -35,7 +36,7 @@ productRouter.post(
 productRouter.put(
   "/:id",
   isAuth,
-  isAdmin,
+  isSellerOrAdmin,
   expressAsyncHandler(async (req, res) => {
     const productId = req.params.id
     const product = await Product.findById(productId)
@@ -107,21 +108,27 @@ productRouter.post(
   })
 )
 
-const PAGE_SIZE = 3
+const PAGE_SIZE = 2
 
 productRouter.get(
   "/admin",
   isAuth,
   isAdmin,
   expressAsyncHandler(async (req, res) => {
+    const seller = req.query.seller || ""
+    const sellerFilter = seller ? { seller } : {}
     const { query } = req
     const page = query.page || 1
     const pageSize = query.pageSize || PAGE_SIZE
 
-    const products = await Product.find()
+    const products = await Product.find({ ...sellerFilter })
       .skip(pageSize * (page - 1))
       .limit(pageSize)
-    const countProducts = await Product.countDocuments()
+    const totalProducts = await Product.find({ ...sellerFilter })
+    const countProducts = totalProducts.length
+    // const countProducts = await Product.countDocuments()
+    console.log("products", products)
+    console.log("countProducts", countProducts)
     res.send({
       products,
       countProducts,
