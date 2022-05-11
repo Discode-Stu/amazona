@@ -56,7 +56,6 @@ export default function SellerScreen() {
         const { data } = await axios.get(`/api/users/public/${sellerId}`, {
           headers: { Authorization: `Bearer ${userInfo.token}` },
         })
-        console.log(data)
         dispatch({ type: "SELLER_SUCCESS", payload: data })
       } catch (err) {
         dispatch({ type: "SELLER_FAILURE", payload: getError(err) })
