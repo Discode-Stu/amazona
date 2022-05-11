@@ -17,6 +17,22 @@ userRouter.get(
 )
 
 userRouter.get(
+  "/public/:id",
+  isAuth,
+  expressAsyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id)
+    if (user) {
+      res.send({
+        email: user.email,
+        seller: { ...user.seller },
+      })
+    } else {
+      res.status(404).send({ message: "User not found" })
+    }
+  })
+)
+
+userRouter.get(
   "/:id",
   isAuth,
   isAdmin,

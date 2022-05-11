@@ -37,6 +37,7 @@ import MapScreen from "./screens/MapScreen"
 import { LoadScript } from "@react-google-maps/api"
 import SellerRoute from "./components/SellerRoute"
 import SellerProductListScreen from "./screens/SellerProductListScreen"
+import SellerScreen from "./screens/SellerScreen"
 
 const libs = ["places"]
 
@@ -71,8 +72,6 @@ function App() {
     }
     fetchCategories()
   }, [])
-
-  console.log("userInfo", userInfo)
 
   useEffect(() => {
     const fetch = async () => {
@@ -208,6 +207,7 @@ function App() {
           <main>
             <Container className="mt-3">
               <Routes>
+                <Route path="/seller/:id" element={<SellerScreen />} />
                 <Route path="/product/:slug" element={<ProductScreen />} />
                 <Route path="/cart" element={<CartScreen />} />
                 <Route path="/search" element={<SearchScreen />} />

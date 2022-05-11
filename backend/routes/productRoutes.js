@@ -6,7 +6,12 @@ import { isAdmin, isAuth, isSellerOrAdmin } from "../utils.js"
 const productRouter = express.Router()
 
 productRouter.get("/", async (req, res) => {
-  const products = await Product.find({})
+  const seller = req.query.seller || ""
+  const sellerFilter = seller ? { seller } : {}
+  const products = await Product.find({ ...sellerFilter }).populate(
+    "seller",
+    "seller.name seller.logo"
+  )
   res.send(products)
 })
 
@@ -228,15 +233,25 @@ productRouter.get(
 )
 
 productRouter.get("/slug/:slug", async (req, res) => {
-  const product = await Product.findOne({ slug: req.params.slug })
+  const newProduct = await Product.findOne({ slug: req.params.slug })
+
+  const product = await newProduct.populate(
+    "seller",
+    "seller.name seller.logo seller.rating seller.numReviews"
+  )
+
   if (product) {
     res.send(product)
   } else {
     res.status(404).send({ message: "Product Not Found" })
   }
 })
+
 productRouter.get("/:id", async (req, res) => {
-  const product = await Product.findById(req.params.id)
+  const product = await Product.findById(req.params.id).populate(
+    "seller",
+    "seller.name seller.logo seller.rating seller.numReviews"
+  )
   if (product) {
     res.send(product)
   } else {

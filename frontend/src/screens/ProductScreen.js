@@ -30,7 +30,11 @@ const reducer = (state, action) => {
     case "FETCH_REQUEST":
       return { ...state, loading: true }
     case "FETCH_SUCCESS":
-      return { ...state, product: action.payload, loading: false }
+      return {
+        ...state,
+        product: action.payload,
+        loading: false,
+      }
     case "FETCH_FAIL":
       return { ...state, error: action.payload, loading: false }
     default:
@@ -46,6 +50,7 @@ function ProductScreen() {
   const [{ loading, error, product, loadingCreateReview }, dispatch] =
     useReducer(reducer, {
       product: [],
+      seller: [],
       loading: true,
       error: "",
     })
@@ -58,8 +63,13 @@ function ProductScreen() {
     const fetchData = async () => {
       dispatch({ type: "FETCH_REQUEST" })
       try {
-        const result = await axios.get(`/api/products/slug/${slug}`)
-        dispatch({ type: "FETCH_SUCCESS", payload: result.data })
+        const { data } = await axios.get(`/api/products/slug/${slug}`)
+
+        dispatch({
+          type: "FETCH_SUCCESS",
+          payload: data,
+        })
+        //use result.data.seller to fetch seller data
       } catch (err) {
         dispatch({ type: "FETCH_FAIL", payload: getError(err) })
       }
@@ -173,6 +183,27 @@ function ProductScreen() {
           <Card>
             <Card.Body>
               <ListGroup variant="flush">
+                <ListGroup.Item>
+                  <Row>
+                    <Col>Seller:</Col>
+                    <Col>
+                      <Link
+                        style={{ textDecoration: "none" }}
+                        to={`/seller/${product.seller._id}`}
+                      >
+                        {product.seller.seller.name}
+                      </Link>
+                    </Col>
+                  </Row>
+                </ListGroup.Item>
+                <ListGroup.Item>
+                  <Row>
+                    <Rating
+                      rating={product.seller.seller.rating}
+                      numReviews={product.seller.seller.numReviews}
+                    />
+                  </Row>
+                </ListGroup.Item>
                 <ListGroup.Item>
                   <Row>
                     <Col>Price:</Col>

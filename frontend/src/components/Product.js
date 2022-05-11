@@ -30,7 +30,7 @@ function Product(props) {
   }
 
   return (
-    <Card key={product.slug}>
+    <Card style={{ minHeight: "555px" }} key={product.slug}>
       <Link to={`/product/${product.slug}`}>
         <img src={product.image} className="card-img-top" alt={product.name} />
       </Link>
@@ -39,7 +39,26 @@ function Product(props) {
           <Card.Title>{product.name}</Card.Title>
         </Link>
         <Rating rating={product.rating} numReviews={product.numReviews} />
-        <Card.Text>${product.price}</Card.Text>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Card.Text>${product.price}</Card.Text>
+
+          {product.seller && (
+            <Link
+              style={{
+                textDecoration: "none",
+                fontWeight: "bold",
+              }}
+              to={`/seller/${product.seller?._id}`}
+            >
+              {product.seller?.seller?.name}
+            </Link>
+          )}
+        </div>
         {product.countInStock === 0 ? (
           <Button disabled variant="light">
             Out of stock
