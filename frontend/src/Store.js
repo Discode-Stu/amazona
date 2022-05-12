@@ -38,16 +38,27 @@ function reducer(state, action) {
           )
         : [...state.cart.cartItems, newItem]
       localStorage.setItem("cartItems", JSON.stringify(cartItems))
-      return { ...state, cart: { ...state.cart, cartItems } }
+      return { ...state, cart: { ...state.cart, cartItems, error: "" } }
     case "CART_REMOVE_ITEM": {
       const cartItems = state.cart.cartItems.filter(
         (item) => item._id !== action.payload._id
       )
       localStorage.setItem("cartItems", JSON.stringify(cartItems))
-      return { ...state, cart: { ...state.cart, cartItems } }
+      return { ...state, cart: { ...state.cart, cartItems, error: "" } }
     }
+    case "CART_ADD_ITEM_FAIL":
+      return {
+        ...state,
+        cart: {
+          ...state.cart,
+          error: action.payload.error,
+          itemID: action.payload.itemID,
+        },
+      }
+    case "CART_REMOVE_ERROR":
+      return { ...state, cart: { ...state.cart, error: "" } }
     case "CART_CLEAR":
-      return { ...state, cart: { ...state.cart, cartItems: [] } }
+      return { ...state, cart: { ...state.cart, cartItems: [], error: "" } }
     case "USER_SIGNIN":
       return { ...state, userInfo: action.payload }
     case "USER_SIGNOUT":

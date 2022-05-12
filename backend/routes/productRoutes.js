@@ -118,7 +118,7 @@ const PAGE_SIZE = 2
 productRouter.get(
   "/admin",
   isAuth,
-  isAdmin,
+  isSellerOrAdmin,
   expressAsyncHandler(async (req, res) => {
     const seller = req.query.seller || ""
     const sellerFilter = seller ? { seller } : {}

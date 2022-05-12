@@ -99,15 +99,22 @@ function HomeScreen() {
         ) : errorTopSellers ? (
           <MessageBox variant="danger">{errorTopSellers}</MessageBox>
         ) : (
-          <>
+          <div
+            style={{
+              backgroundColor: "#f5f5f5",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             {topSellers.length === 0 && <MessageBox>No top sellers</MessageBox>}
             <Carousel
               showArrows={true}
               autoPlay
-              interval={3000}
+              interval={4000}
               infiniteLoop
               emulateTouch
-              showThumbs={true}
+              showThumbs={false}
               renderArrowNext={(onClick) => (
                 <i
                   onClick={onClick}
@@ -127,12 +134,14 @@ function HomeScreen() {
                 <div key={seller._id}>
                   <Link to={`/seller/${seller._id}`}>
                     <img src={seller.seller.logo} alt={seller.seller.name} />
-                    <p className="legend">{seller.seller.name}</p>
+                    <p style={{ letterSpacing: 1 }} className="legend">
+                      {seller.seller.name}
+                    </p>
                   </Link>
                 </div>
               ))}
             </Carousel>
-          </>
+          </div>
         )}
       </div>
 

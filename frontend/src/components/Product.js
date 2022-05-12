@@ -3,23 +3,42 @@ import Card from "react-bootstrap/Card"
 import Button from "react-bootstrap/Button"
 import Rating from "./Rating"
 import axios from "axios"
-import { useContext } from "react"
+import { useContext, useEffect } from "react"
 import { Store } from "../Store"
+import MessageBox from "./MessageBox"
 
 function Product(props) {
   const { product } = props
 
   const { state, dispatch: ctxDispatch } = useContext(Store)
   const {
-    cart: { cartItems },
+    cart: { cartItems, error: cartError, itemID },
   } = state
+
+  useEffect(() => {
+    return () => {
+      ctxDispatch({ type: "CART_REMOVE_ERROR" })
+    }
+  }, [ctxDispatch])
 
   const addToCartHandler = async (item) => {
     const existItem = cartItems.find((x) => x._id === product._id)
     const quantity = existItem ? existItem.quantity + 1 : 1
+    //enter error code here - no multi seller purchase
     const { data } = await axios.get(`/api/products/${item._id}`)
     if (data.countInStock < quantity) {
       window.alert("Sorry. Product is out of stock")
+      return
+    }
+
+    if (cartItems.length > 0 && data.seller._id !== cartItems[0].seller._id) {
+      ctxDispatch({
+        type: "CART_ADD_ITEM_FAIL",
+        payload: {
+          error: `Can't add to cart. Please buy only from ${cartItems[0].seller.seller.name} in this order.`,
+          itemID: item._id,
+        },
+      })
       return
     }
 
@@ -30,7 +49,7 @@ function Product(props) {
   }
 
   return (
-    <Card style={{ minHeight: "555px" }} key={product.slug}>
+    <Card key={product.slug}>
       <Link to={`/product/${product.slug}`}>
         <img src={product.image} className="card-img-top" alt={product.name} />
       </Link>
@@ -59,6 +78,9 @@ function Product(props) {
             </Link>
           )}
         </div>
+        {cartError && product._id === itemID && (
+          <MessageBox variant="danger">{cartError}</MessageBox>
+        )}
         {product.countInStock === 0 ? (
           <Button disabled variant="light">
             Out of stock

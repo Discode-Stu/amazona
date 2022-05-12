@@ -106,6 +106,7 @@ userRouter.post(
           email: user.email,
           isAdmin: user.isAdmin,
           isSeller: user.isSeller,
+          seller: user.seller,
           token: generateToken(user),
         })
         return

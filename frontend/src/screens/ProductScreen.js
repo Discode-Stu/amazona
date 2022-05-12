@@ -79,14 +79,33 @@ function ProductScreen() {
 
   const { state, dispatch: ctxDispatch } = useContext(Store)
 
-  const { cart, userInfo } = state
+  const {
+    cart: { cartItems, error: cartError },
+    userInfo,
+  } = state
+
+  useEffect(() => {
+    return () => {
+      ctxDispatch({ type: "CART_REMOVE_ERROR" })
+    }
+  }, [ctxDispatch])
 
   const addToCartHandler = async () => {
-    const existItem = cart.cartItems.find((x) => x._id === product._id)
+    const existItem = cartItems.find((x) => x._id === product._id)
     const quantity = existItem ? existItem.quantity + 1 : 1
     const { data } = await axios.get(`/api/products/${product._id}`)
     if (data.countInStock < quantity) {
       window.alert("Sorry. Product is out of stock")
+      return
+    }
+    //enter error code here - no multi seller purchase
+    if (cartItems.length > 0 && data.seller._id !== cartItems[0].seller._id) {
+      ctxDispatch({
+        type: "CART_ADD_ITEM_FAIL",
+        payload: {
+          error: `Can't add to cart. Please buy only from ${cartItems[0].seller.seller.name} in this order.`,
+        },
+      })
       return
     }
 
@@ -223,13 +242,22 @@ function ProductScreen() {
                   </Row>
                 </ListGroup.Item>
                 {product.countInStock > 0 && (
-                  <ListGroup.Item>
-                    <div className="d-grid">
-                      <Button onClick={addToCartHandler} variant="primary">
-                        Add to Cart
-                      </Button>
-                    </div>
-                  </ListGroup.Item>
+                  <>
+                    {cartError && (
+                      <ListGroup.Item>
+                        <div className="d-grid">
+                          <MessageBox variant="danger">{cartError}</MessageBox>
+                        </div>
+                      </ListGroup.Item>
+                    )}
+                    <ListGroup.Item>
+                      <div className="d-grid">
+                        <Button onClick={addToCartHandler} variant="primary">
+                          Add to Cart
+                        </Button>
+                      </div>
+                    </ListGroup.Item>
+                  </>
                 )}
               </ListGroup>
             </Card.Body>

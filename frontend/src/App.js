@@ -290,9 +290,9 @@ function App() {
                 <Route
                   path="/admin/product/:id"
                   element={
-                    <AdminRoute>
+                    <SellerRoute>
                       <ProductEditScreen />
-                    </AdminRoute>
+                    </SellerRoute>
                   }
                 ></Route>
                 <Route
