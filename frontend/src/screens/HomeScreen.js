@@ -58,7 +58,6 @@ function HomeScreen() {
       dispatch({ type: "TOP_SELLERS_REQUEST" })
       try {
         const { data } = await axios.get("/api/users/top-sellers")
-        console.log("data TS__:::", data)
         dispatch({ type: "TOP_SELLERS_SUCCESS", payload: data })
       } catch (err) {
         dispatch({ type: "TOP_SELLERS_FAIL", payload: err.message })

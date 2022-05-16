@@ -67,7 +67,7 @@ export default function DashboardScreen() {
                       ? summary.users[0].numUsers
                       : 0}
                   </Card.Title>
-                  <Card.Text> Users</Card.Text>
+                  <Card.Text>Users</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -79,7 +79,7 @@ export default function DashboardScreen() {
                       ? summary.orders[0].numOrders
                       : 0}
                   </Card.Title>
-                  <Card.Text> Orders</Card.Text>
+                  <Card.Text>Orders</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -92,7 +92,7 @@ export default function DashboardScreen() {
                       ? summary.orders[0].totalSales.toFixed(2)
                       : 0}
                   </Card.Title>
-                  <Card.Text> Orders</Card.Text>
+                  <Card.Text>Sales</Card.Text>
                 </Card.Body>
               </Card>
             </Col>
@@ -108,8 +108,8 @@ export default function DashboardScreen() {
                 chartType="AreaChart"
                 loader={<div>Loading Chart...</div>}
                 data={[
-                  ["Date", "Sales"],
-                  ...summary.dailyOrders.map((x) => [x._id, x.sales]),
+                  ["Date", "Sales"], //axis labels
+                  ...summary.dailyOrders.map((x) => [x._id, x.sales]), //data
                 ]}
               ></Chart>
             )}

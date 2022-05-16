@@ -131,27 +131,251 @@ button.thumbnail {
 .row {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
-
+.row.center {
+  justify-content: center;
+}
 .row.top {
   align-items: flex-start;
 }
-
+.row.start {
+  justify-content: flex-start;
+}
 .col-1 {
-  flex: 1;
-  /* flex: 1 1 25rem; */
+  flex: 1 1 25rem;
 }
 .col-2 {
   flex: 2 1 50rem;
 }
-
 .col-3 {
-  flex: 3;
-  /* flex: 3 1 75rem; */
+  flex: 32 1 75rem;
+}
+.min-30 {
+  min-width: 30rem;
+}
+.p-1 {
+  padding: 1rem;
+}
+
+.full-container {
+  margin: -1rem;
+  margin-left: -4rem;
+  min-height: calc(100% + 2rem);
+}
+
+.close-chat-btn{
+  width: 3rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding:5px;
+}
+
+.chatbox-title {
+  width: fit-content;
 }
 
 .carousel .slide img {
   max-width: 20rem;
+}
+/* Chatbox */
+.chatbox {
+  color: #000000;
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+}
+
+.chatbox ul {
+  overflow: scroll;
+  max-height: 20rem;
+}
+.chatbox li {
+  margin-bottom: 1rem;
+}
+.chatbox input {
+  width: calc(100% - 9rem);
+}
+
+.support-screen {
+  display: flex;
+  width: 95vw;
+  height: 95vh;
+  position: absolute;
+  left: 0;
+  top: 56px;
+}
+
+.support-screen ul {
+  border-bottom: 1px solid gray;
+  /* display: flex; */
+  /* justify-content: space-between; */
+  /* align-items: center; */
+}
+
+.support-users {
+  background: #f0f0f0;
+  min-height: 100%;
+}
+.support-users li {
+  background-color: #f8f8f8;
+}
+.support-users button {
+  background-color: transparent;
+  /* border:1px solid red; */
+
+  text-align: left;
+}
+
+.support-users span {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  position: absolute;
+  margin-left: -35px;
+  margin-top: 5px;
+}
+
+.support-users li {
+  margin: 0;
+  background-color: #f0f0f0;
+  /* border-bottom: 0.1rem #c0c0c0 solid; */
+}
+
+.support-users li:hover {
+  background-color:darkgray;
+  /* background-color: #f0f0f0; */
+}
+.support-users li.selected {
+  background-color: #c0c0c0;
+}
+.support-messages {
+  padding: 1rem;
+}
+.support-messages input {
+  width: calc(100% - 9rem);
+  font-size: 1rem;
+  background-color: rgba(0, 0, 0, 0.1);
+  /* border-bottom: 1px solid gray; */
+  padding: 5px;
+  flex: 5;
+}
+.support-messages ul {
+  height: calc(100vh - 18rem);
+  max-height: calc(100vh - 18rem);
+  overflow: scroll;
+}
+.support-messages li {
+  margin-bottom: 1rem;
+}
+.support-msg-form  button {
+  font-size: 1rem;
+  padding: 5px 10px;
+  background-color: #f0c040;
+  width: 100%;
+  flex: 1;
+}
+.support-msg-form  button:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.support-msg-form {
+  padding: 1rem 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 3px;
+  /* border: 1px solid red; */
+}
+
+.support-users .offline {
+  background-color: #808080;
+}
+.support-users .online {
+  background-color: #20a020;
+}
+.support-users .unread {
+  background-color: #f02020;
+}
+
+.card {
+  border: 0.1rem #c0c0c0 solid;
+  background-color: #f8f8f8;
+  border-radius: 0.5rem;
+  margin: 1rem;
+}
+.card-body {
+  padding: 1rem;
+}
+.card-body > * {
+  margin-bottom: 0.5rem;
+}
+
+
+input,
+select,
+textarea,
+button {
+  /* padding: 1rem; */
+  border-radius: 0.5rem;
+  /* border: 0.1rem #a4a4a4 solid; */
+  border: none;
+  font-size: 1.6rem;
+  font-family: Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+button {
+  background-color: #f8f8f8;
+  cursor: pointer;
+}
+
+input:hover,
+select:hover,
+textarea:hover,
+button:hover {
+  /* border: 0.1rem #404040 solid; */
+}
+button.primary {
+  background-color: #f0c040;
+}
+button.block {
+  width: 100%;
+}
+button.small {
+  font-size: 1.2rem;
+}
+
+ul {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+li {
+  margin-top: 1rem;
+}
+
+.chatbox-msg-form{
+  display: flex;
+  gap: 2px;
+}
+
+.chatbox-msg-input {
+ flex: 2;
+ padding-left: .5rem;
+ border: 1px solid gray;
+ font-size: 1rem;
+}
+.chatbox-msg-input::placeholder {
+ font-size: 1rem;
+}
+.chatbox-msg-btn {
+  flex: 1;
+
+}
+.chatbox-msg-area{
+  height: calc(30vh);
+  max-height: calc(30vh);
+  overflow: scroll;
 }

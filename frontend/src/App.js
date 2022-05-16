@@ -38,6 +38,8 @@ import { LoadScript } from "@react-google-maps/api"
 import SellerRoute from "./components/SellerRoute"
 import SellerProductListScreen from "./screens/SellerProductListScreen"
 import SellerScreen from "./screens/SellerScreen"
+import SupportScreen from "./screens/SupportScreen"
+import ChatBox from "./components/ChatBox"
 
 const libs = ["places"]
 
@@ -174,6 +176,9 @@ function App() {
                         <LinkContainer to="/admin/users">
                           <NavDropdown.Item>Users</NavDropdown.Item>
                         </LinkContainer>
+                        <LinkContainer to="/admin/support">
+                          <NavDropdown.Item>Support</NavDropdown.Item>
+                        </LinkContainer>
                       </NavDropdown>
                     )}
                   </Nav>
@@ -304,6 +309,14 @@ function App() {
                   }
                 ></Route>
                 <Route
+                  path="/admin/support"
+                  element={
+                    <AdminRoute>
+                      <SupportScreen />
+                    </AdminRoute>
+                  }
+                ></Route>
+                <Route
                   path="/seller/products"
                   element={
                     <SellerRoute>
@@ -324,6 +337,7 @@ function App() {
             </Container>
           </main>
           <footer>
+            {userInfo && !userInfo.isAdmin && <ChatBox userInfo={userInfo} />}
             <div className="text-center">All rights reserved</div>
           </footer>
         </div>

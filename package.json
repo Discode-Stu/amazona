@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/Discode-Stu/amazona/issues"
   },
-  "homepage": "https://github.com/Discode-Stu/amazona#readme"
+  "homepage": "https://github.com/Discode-Stu/amazona#readme",
+  "dependencies": {
+    "socket.io": "^4.5.0"
+  }
 }

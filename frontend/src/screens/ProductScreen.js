@@ -202,26 +202,30 @@ function ProductScreen() {
           <Card>
             <Card.Body>
               <ListGroup variant="flush">
+                {product.seller && (
+                  <ListGroup.Item>
+                    <Row>
+                      <Col>Seller:</Col>
+                      <Col>
+                        <Link
+                          style={{ textDecoration: "none" }}
+                          to={`/seller/${product.seller._id}`}
+                        >
+                          {product.seller.seller.name}
+                        </Link>
+                      </Col>
+                    </Row>
+                  </ListGroup.Item>
+                )}
                 <ListGroup.Item>
-                  <Row>
-                    <Col>Seller:</Col>
-                    <Col>
-                      <Link
-                        style={{ textDecoration: "none" }}
-                        to={`/seller/${product.seller._id}`}
-                      >
-                        {product.seller.seller.name}
-                      </Link>
-                    </Col>
-                  </Row>
-                </ListGroup.Item>
-                <ListGroup.Item>
-                  <Row>
-                    <Rating
-                      rating={product.seller.seller.rating}
-                      numReviews={product.seller.seller.numReviews}
-                    />
-                  </Row>
+                  {product.seller && (
+                    <Row>
+                      <Rating
+                        rating={product.seller.seller.rating}
+                        numReviews={product.seller.seller.numReviews}
+                      />
+                    </Row>
+                  )}
                 </ListGroup.Item>
                 <ListGroup.Item>
                   <Row>
