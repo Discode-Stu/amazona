@@ -154,7 +154,13 @@ function HomeScreen() {
           <Row>
             {products.length === 0 && <MessageBox>No products</MessageBox>}
             {products.map((product) => (
-              <Col key={product.slug} sm={6} md={4} lg={3} className="mb-3">
+              <Col
+                key={product.slug}
+                sm={6}
+                md={4}
+                lg={3}
+                className="mb-3 product-col"
+              >
                 <Product product={product}></Product>
               </Col>
             ))}
