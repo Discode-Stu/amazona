@@ -17,4 +17,4 @@ Deployment to Heroku:
 To run locally:
 
 1. npm start in root of project to run the server
-2. yarn start in root of frontend to run frontend
+2. npm start in root of frontend to run frontend
